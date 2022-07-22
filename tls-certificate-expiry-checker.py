@@ -54,7 +54,7 @@ def send_mail(url: str, sender: str, recipient: str, sendgrid_api_key: str, days
         print(error.to_dict)
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-u', '--url', type=str, required=True)
@@ -78,3 +78,7 @@ if __name__ == "__main__":
 
     print('INFO: Nothing to worry about. The TLS certificate for', args.url,
           'will expire only in', days_before_certificate_expires, 'days')
+
+
+if __name__ == "__main__":
+    main()
