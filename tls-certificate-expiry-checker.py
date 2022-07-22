@@ -35,7 +35,7 @@ def get_days_before_expiration(url: str, port: int = 443):
             return days_before_certificate_expires
 
 
-def send_mail(url: str, sender: str, recipient: str, sendgrid_api_key: str, days_before_certificate_expires: int):
+def send_mail(url: str, sender: str, recipient: str, sendgrid_api_key: str):
     email_api = 'https://api.sendgrid.com/v3/mail/send'
     subject = 'TLS certificate for', url, 'about to expire'
 
@@ -71,14 +71,14 @@ def main():
 
     check_url(args.url)
 
-    days_before_certificate_expires = get_days_before_expiration(args.url)
+    global days_before_certificate_expires = get_days_before_expiration(args.url)
 
     if days_before_certificate_expires <= args.thresold:
         warnings.warn('WARN: The TLS certificate for', args.url, 'will expire in',
               days_before_certificate_expires, 'days')
 
         send_mail(args.url, args.sender,
-                  args.recipient, args.sendgrid_api_key, days_before_certificate_expires)
+                  args.recipient, args.sendgrid_api_key)
     else:
         print('INFO: Nothing to worry about. The TLS certificate for', args.url,
               'will expire only in', days_before_certificate_expires, 'days')
