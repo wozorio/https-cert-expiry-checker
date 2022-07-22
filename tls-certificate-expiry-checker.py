@@ -79,9 +79,9 @@ def main():
 
         send_mail(args.url, args.sender,
                   args.recipient, args.sendgrid_api_key, days_before_certificate_expires)
-
-    print('INFO: Nothing to worry about. The TLS certificate for', args.url,
-          'will expire only in', days_before_certificate_expires, 'days')
+    else:
+        print('INFO: Nothing to worry about. The TLS certificate for', args.url,
+              'will expire only in', days_before_certificate_expires, 'days')
 
 
 if __name__ == "__main__":
