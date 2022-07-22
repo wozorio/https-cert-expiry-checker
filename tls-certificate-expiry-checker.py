@@ -8,6 +8,7 @@ import smtplib
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from python_http_client.exceptions import HTTPError
+import warnings
 
 
 def check_url(url: str):
@@ -72,7 +73,7 @@ def main():
     days_before_certificate_expires = get_days_before_expiration(args.url)
 
     if days_before_certificate_expires <= args.thresold:
-        print('WARN: The TLS certificate for', args.url, 'will expire in',
+        warnings.warn('WARN: The TLS certificate for', args.url, 'will expire in',
               days_before_certificate_expires, 'days')
 
         send_mail(args.url, args.sender,
