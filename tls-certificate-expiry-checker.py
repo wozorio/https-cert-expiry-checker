@@ -2,13 +2,14 @@
 
 import argparse
 import requests
-from urllib.request import ssl, socket
 import datetime
 import smtplib
+import warnings
+
+from urllib.request import ssl, socket
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from python_http_client.exceptions import HTTPError
-import warnings
 
 
 def check_url(url: str):
