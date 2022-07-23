@@ -18,7 +18,7 @@ def check_url(url: str):
         raise SystemExit(err)
 
 
-def get_days_before_cert_expires(url: str, port: int = 443):
+def get_days_before_cert_expires(url: str, port: int = 443) -> int:
     context = ssl.create_default_context()
 
     with socket.create_connection((url, port)) as sock:
