@@ -60,30 +60,32 @@ def send_mail(url: str, sender: str, recipients: list, sendgrid_api_key: str, da
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
+    required_arg = parser.add_argument_group('required arguments')
+
+    required_arg.add_argument(
         '-u', '--url',
-        help='<Required> URL to be checked',
+        help='URL to be checked',
         type=str,
         required=True)
-    parser.add_argument(
+    required_arg.add_argument(
         '-s', '--sender',
-        help='<Required> Sender e-mail address',
+        help='Sender e-mail address',
         type=str,
         required=True)
-    parser.add_argument(
+    required_arg.add_argument(
         '-r', '--recipient',
-        help='<Required> Recipients e-mail addresses',
+        help='Recipients e-mail addresses',
         nargs='+',
         type=str,
         required=True)
-    parser.add_argument(
+    required_arg.add_argument(
         '-k', '--sendgrid_api_key',
-        help='<Required> SendGrid API key',
+        help='SendGrid API key',
         type=str,
         required=True)
     parser.add_argument(
         '-t', '--threshold',
-        help='<Optional> Number of days to be notified before certificate expires',
+        help='Number of days to be notified before the certificate expires. When omitted, a value of 60 is used',
         type=int,
         default=60)
 
