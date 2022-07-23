@@ -26,14 +26,16 @@ usage: https-cert-expiry-checker.py [-h] -u URL -s SENDER -r RECIPIENT
 
 optional arguments:
   -h, --help            show this help message and exit
-  -u URL, --url URL     <Required> URL to be checked
-  -s SENDER, --sender SENDER
-                        <Required> Sender e-mail address
-  -r RECIPIENT [RECIPIENT ...], --recipient RECIPIENT [RECIPIENT ...]
-                        <Required> Recipients e-mail addresses
-  -k SENDGRID_API_KEY, --sendgrid_api_key SENDGRID_API_KEY
-                        <Required> SendGrid API key
   -t THRESHOLD, --threshold THRESHOLD
-                        <Optional> Number of days to be notified before
-                        certificate expires
+                        Number of days to be notified before the certificate
+                        expires. When omitted, a value of 60 is used
+
+required arguments:
+  -u URL, --url URL     URL to be checked
+  -s SENDER, --sender SENDER
+                        Sender e-mail address
+  -r RECIPIENT [RECIPIENT ...], --recipient RECIPIENT [RECIPIENT ...]
+                        Recipients e-mail addresses
+  -k SENDGRID_API_KEY, --sendgrid_api_key SENDGRID_API_KEY
+                        SendGrid API key
 ```
