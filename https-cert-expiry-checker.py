@@ -61,15 +61,18 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        '-u', '--url', help='<Required> URL to be checked',
+        '-u', '--url',
+        help='<Required> URL to be checked',
         type=str,
         required=True)
     parser.add_argument(
-        '-s', '--sender', help='<Required> Sender e-mail address',
+        '-s', '--sender',
+        help='<Required> Sender e-mail address',
         type=str,
         required=True)
     parser.add_argument(
-        '-r', '--recipient', help='<Required> Recipients e-mail addresses',
+        '-r', '--recipient',
+        help='<Required> Recipients e-mail addresses',
         nargs='+',
         type=str,
         required=True)
