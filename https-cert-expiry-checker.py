@@ -82,8 +82,8 @@ def main():
         type=str,
         required=True)
     parser.add_argument(
-        '-t', '--thresold',
-        help='<Optional> Threshold',
+        '-t', '--threshold',
+        help='<Optional> Number of days to be notified before certificate expires',
         type=int,
         default=60)
 
@@ -93,7 +93,7 @@ def main():
 
     days_before_cert_expires = get_days_before_cert_expires(args.url)
 
-    if days_before_cert_expires <= args.thresold:
+    if days_before_cert_expires <= args.threshold:
         print('WARN: The TLS certificate for', args.url, 'will expire in',
               days_before_cert_expires, 'days')
 
