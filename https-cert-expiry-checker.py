@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 
-import argparse
-import requests
-import datetime
+""""
+HTTPS Certificate Expiry Checker
+"""
 
+import argparse
+import datetime
 from urllib.request import ssl, socket
+import requests
+from python_http_client.exceptions import HTTPError
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from python_http_client.exceptions import HTTPError
 
 __author__ = 'Wellington Ozorio'
 __email__ = 'well.ozorio@gmail.com'
@@ -16,7 +19,7 @@ __version__ = '0.0.1'
 
 def check_url(url: str):
     try:
-        resp = requests.get('https://' + url, allow_redirects=True)
+        requests.get('https://' + url, allow_redirects=True)
     except requests.exceptions.RequestException as err:
         raise SystemExit(err)
 
@@ -37,8 +40,8 @@ def get_days_before_cert_expires(url: str, port: int = 443) -> int:
             return days_before_cert_expires
 
 
-def send_mail(url: str, sender: str, recipients: list, sendgrid_api_key: str, days_before_cert_expires: int):
-    email_api = 'https://api.sendgrid.com/v3/mail/send'
+def send_mail(url: str, sender: str, recipients: list,
+              sendgrid_api_key: str, days_before_cert_expires: int):
     subject = f'TLS certificate for {url} about to expire'
 
     print('INFO: Sending notification via e-mail')
@@ -53,14 +56,14 @@ def send_mail(url: str, sender: str, recipients: list, sendgrid_api_key: str, da
         <p> Sincerely yours, <br>DevOps Team </p>')
 
     try:
-        sg = SendGridAPIClient(sendgrid_api_key)
-        resp = sg.send(message)
+        sendgrid = SendGridAPIClient(sendgrid_api_key)
+        resp = sendgrid.send(message)
         print(resp.status_code, resp.body, resp.headers)
     except HTTPError as err:
         print(err.to_dict)
 
 
-def main():
+def get_args():
     parser = argparse.ArgumentParser()
 
     required_arg = parser.add_argument_group('required arguments')
@@ -94,8 +97,14 @@ def main():
     parser.add_argument(
         '-v', '--version',
         action="version",
-        version=f"%(prog)s {__version__}"
+        version=f"%(prog)s version {__version__} by {__author__}"
     )
+
+    return parser
+
+
+def main():
+    parser = get_args()
 
     args = parser.parse_args()
 
