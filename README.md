@@ -22,13 +22,14 @@ $ sudo ./install-requirements.sh
 $ ./https-cert-expiry-checker.py --help
 usage: https-cert-expiry-checker.py [-h] -u URL -s SENDER -r RECIPIENT
                                     [RECIPIENT ...] -k SENDGRID_API_KEY
-                                    [-t THRESHOLD]
+                                    [-t THRESHOLD] [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
   -t THRESHOLD, --threshold THRESHOLD
                         Number of days to be notified before the certificate
                         expires. When omitted, a value of 60 is used
+  -v, --version         show program's version number and exit
 
 required arguments:
   -u URL, --url URL     URL to be checked
