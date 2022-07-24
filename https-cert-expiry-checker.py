@@ -7,8 +7,10 @@ HTTPS Certificate Expiry Checker
 import argparse
 import datetime
 from urllib.request import ssl, socket
+
 import requests
 from python_http_client.exceptions import HTTPError
+
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
