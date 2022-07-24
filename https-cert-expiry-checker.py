@@ -9,6 +9,8 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from python_http_client.exceptions import HTTPError
 
+__author__ = 'Wellington Ozorio'
+__email__ = 'well.ozorio@gmail.com'
 __version__ = '0.0.1'
 
 
