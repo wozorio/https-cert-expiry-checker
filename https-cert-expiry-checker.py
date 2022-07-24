@@ -99,8 +99,7 @@ def get_args():
     parser.add_argument(
         '-v', '--version',
         action="version",
-        version=f"%(prog)s version {__version__} by {__author__}"
-    )
+        version=f"%(prog)s version {__version__} by {__author__}")
 
     return parser
 
