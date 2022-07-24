@@ -3,7 +3,6 @@
 import argparse
 import requests
 import datetime
-import smtplib
 
 from urllib.request import ssl, socket
 from sendgrid import SendGridAPIClient
