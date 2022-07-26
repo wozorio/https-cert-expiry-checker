@@ -7,15 +7,12 @@ HTTPS Certificate Expiry Checker
 import argparse
 import datetime
 from urllib.request import ssl, socket
-
 import requests
 from python_http_client.exceptions import HTTPError
-
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-__author__ = 'Wellington Ozorio'
-__email__ = 'well.ozorio@gmail.com'
+__author__ = 'Wellington Ozorio <well.ozorio@gmail.com>'
 __version__ = '0.0.1'
 
 
@@ -23,10 +20,10 @@ def check_url(url: str):
     try:
         requests.get('https://' + url, allow_redirects=True)
     except requests.exceptions.RequestException as err:
-        raise SystemExit(err)
+        raise SystemExit(err) from err
 
 
-def get_days_before_cert_expires(url: str, port: int = 443) -> int:
+def get_days_before_cert_expires(url: str, port: int = 443):
     context = ssl.create_default_context()
 
     with socket.create_connection((url, port)) as sock:
@@ -71,43 +68,48 @@ def get_args():
     required_arg = parser.add_argument_group('required arguments')
 
     required_arg.add_argument(
-        '-u', '--url',
+        '-u',
         help='URL to be checked',
         type=str,
+        dest='url',
         required=True)
     required_arg.add_argument(
-        '-s', '--sender',
-        help='Sender e-mail address',
+        '-s',
+        help='sender e-mail address',
         type=str,
+        dest='sender',
         required=True)
     required_arg.add_argument(
-        '-r', '--recipient',
-        help='Recipients e-mail addresses',
+        '-r',
+        help='recipients e-mail addresses',
         nargs='+',
         type=str,
+        dest='recipient',
         required=True)
     required_arg.add_argument(
-        '-k', '--sendgrid_api_key',
+        '-k',
         help='SendGrid API key',
         type=str,
+        dest='sendgrid_api_key',
         required=True)
     parser.add_argument(
-        '-t', '--threshold',
-        help='Number of days to be notified before the certificate expires. When omitted, a value of 60 is used',
+        '-t',
+        help='number of days to be notified before the certificate expires (default: 60)',
         type=int,
+        dest='threshold',
         default=60)
     parser.add_argument(
         '-v', '--version',
         action="version",
-        version=f"%(prog)s version {__version__} by {__author__}")
+        version=f'%(prog)s version {__version__}')
 
-    return parser
+    args = parser.parse_args()
+
+    return args
 
 
 def main():
-    parser = get_args()
-
-    args = parser.parse_args()
+    args = get_args()
 
     check_url(args.url)
 
