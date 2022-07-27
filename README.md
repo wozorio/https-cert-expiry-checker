@@ -12,17 +12,23 @@ A Python script that checks the expiration date of HTTPS/TLS certificates and no
 
 ## Prerequisites
 
-```bash
-$ sudo ./install-requirements.sh
-```
+1. Set an environment variable with the SendGrid API key:
+    ```bash
+    export SENDGRID_API_KEY=<SENDGRID_API_KEY>
+    ```
+
+1. Install requirements:
+
+    ```bash
+    $ sudo ./install-requirements.sh
+    ```
 
 ## Usage
 
 ```
 $ ./https-cert-expiry-checker.py --help
 usage: https-cert-expiry-checker.py [-h] -u URL -s SENDER -r RECIPIENT
-                                    [RECIPIENT ...] -k SENDGRID_API_KEY
-                                    [-t THRESHOLD] [-v]
+                                    [RECIPIENT ...] [-t THRESHOLD] [-v]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -35,5 +41,4 @@ required arguments:
   -s SENDER             sender e-mail address
   -r RECIPIENT [RECIPIENT ...]
                         recipients e-mail addresses
-  -k SENDGRID_API_KEY   SendGrid API key
 ```
