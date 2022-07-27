@@ -37,13 +37,13 @@ def get_days_before_cert_expires(url: str, port: int = 443):
 
                 days_before_cert_expires = (
                     cert_expiry_date - datetime.datetime.now()).days
-
-                return days_before_cert_expires
     except Exception as err:
         print('ERROR: Failed to calculate the number of days remaining before \
             the certificate expires')
         log.exception(err)
         raise SystemExit(err) from err
+    else:
+        return days_before_cert_expires
 
 
 def send_mail(url: str, sender: str, recipients: list,
