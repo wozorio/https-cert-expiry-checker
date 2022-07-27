@@ -57,9 +57,9 @@ def send_mail(url: str, sender: str, recipients: list,
         to_emails=recipients,
         subject=subject,
         html_content=f'<p> Dear Site Reliability Engineer, </p> \
-        <p> This is to notify you that the TLS certificate for <b>{url}</b> is expiring soon. </p> \
-        <p> Please ensure a new certificate is ordered and installed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
-        <p> Sincerely yours, <br>DevOps Team </p>')
+            <p> This is to notify you that the TLS certificate for <b>{url}</b> is expiring soon. </p> \
+            <p> Please ensure a new certificate is ordered and installed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
+            <p> Sincerely yours, <br>DevOps Team </p>')
 
     try:
         sendgrid = SendGridAPIClient(sendgrid_api_key)
