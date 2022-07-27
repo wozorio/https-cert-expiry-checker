@@ -6,6 +6,7 @@ HTTPS Certificate Expiry Checker
 
 import argparse
 import datetime
+import logging as log
 from urllib.request import ssl, socket
 import requests
 from python_http_client.exceptions import HTTPError
@@ -26,17 +27,23 @@ def check_url(url: str):
 def get_days_before_cert_expires(url: str, port: int = 443):
     context = ssl.create_default_context()
 
-    with socket.create_connection((url, port)) as sock:
-        with context.wrap_socket(sock, server_hostname=url) as ssock:
-            cert = ssock.getpeercert()
+    try:
+        with socket.create_connection((url, port)) as sock:
+            with context.wrap_socket(sock, server_hostname=url) as ssock:
+                cert = ssock.getpeercert()
 
-            cert_expiry_date = datetime.datetime.strptime(
-                cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+                cert_expiry_date = datetime.datetime.strptime(
+                    cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
 
-            days_before_cert_expires = (
-                cert_expiry_date - datetime.datetime.now()).days
+                days_before_cert_expires = (
+                    cert_expiry_date - datetime.datetime.now()).days
 
-            return days_before_cert_expires
+                return days_before_cert_expires
+    except Exception as err:
+        print('ERROR: Failed to calculate the number of days remaining before \
+            the certificate expires')
+        log.exception(err)
+        raise SystemExit(err) from err
 
 
 def send_mail(url: str, sender: str, recipients: list,
@@ -59,7 +66,7 @@ def send_mail(url: str, sender: str, recipients: list,
         resp = sendgrid.send(message)
         print(resp.status_code, resp.body, resp.headers)
     except HTTPError as err:
-        print(err.to_dict)
+        raise SystemExit(err) from err
 
 
 def get_args():
