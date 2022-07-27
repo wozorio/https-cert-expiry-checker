@@ -7,6 +7,7 @@ HTTPS Certificate Expiry Checker
 import argparse
 import datetime
 import logging as log
+import os
 from urllib.request import ssl, socket
 import requests
 from python_http_client.exceptions import HTTPError
@@ -24,7 +25,7 @@ def check_url(url: str):
         raise SystemExit(err) from err
 
 
-def get_days_before_cert_expires(url: str, port: int = 443):
+def get_cert_expiry_date(url: str, port: int = 443):
     context = ssl.create_default_context()
 
     try:
@@ -34,21 +35,24 @@ def get_days_before_cert_expires(url: str, port: int = 443):
 
                 cert_expiry_date = datetime.datetime.strptime(
                     cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
-
-                days_before_cert_expires = (
-                    cert_expiry_date - datetime.datetime.now()).days
     except Exception as err:
-        print('ERROR: Failed to calculate the number of days remaining before \
-            the certificate expires')
+        print('ERROR: Failed to get certificate expiry date')
         log.exception(err)
         raise SystemExit(err) from err
     else:
-        return days_before_cert_expires
+        return cert_expiry_date
 
 
-def send_mail(url: str, sender: str, recipients: list,
-              sendgrid_api_key: str, days_before_cert_expires: int):
+def get_days_before_cert_expires(cert_expiry_date: datetime.date):
+    days_before_cert_expires = (
+        cert_expiry_date - datetime.datetime.now()).days
+
+    return days_before_cert_expires
+
+
+def send_mail(url: str, sender: str, recipients: list, cert_expiry_date: datetime.date):
     subject = f'TLS certificate for {url} about to expire'
+    days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
     print('INFO: Sending notification via e-mail')
 
@@ -57,12 +61,12 @@ def send_mail(url: str, sender: str, recipients: list,
         to_emails=recipients,
         subject=subject,
         html_content=f'<p> Dear Site Reliability Engineer, </p> \
-            <p> This is to notify you that the TLS certificate for <b>{url}</b> is expiring soon. </p> \
+            <p> This is to notify you that the TLS certificate for <b>{url}</b> will expire on {cert_expiry_date}. </p> \
             <p> Please ensure a new certificate is ordered and installed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
             <p> Sincerely yours, <br>DevOps Team </p>')
 
     try:
-        sendgrid = SendGridAPIClient(sendgrid_api_key)
+        sendgrid = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
         resp = sendgrid.send(message)
         print(resp.status_code, resp.body, resp.headers)
     except HTTPError as err:
@@ -93,12 +97,6 @@ def get_args():
         type=str,
         dest='recipient',
         required=True)
-    required_arg.add_argument(
-        '-k',
-        help='SendGrid API key',
-        type=str,
-        dest='sendgrid_api_key',
-        required=True)
     parser.add_argument(
         '-t',
         help='number of days to be notified before the certificate expires (default: 60)',
@@ -120,14 +118,15 @@ def main():
 
     check_url(args.url)
 
-    days_before_cert_expires = get_days_before_cert_expires(args.url)
+    cert_expiry_date = get_cert_expiry_date(args.url)
+    days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
     if days_before_cert_expires <= args.threshold:
         print('WARN: The TLS certificate for', args.url, 'will expire in',
               days_before_cert_expires, 'days')
 
-        send_mail(args.url, args.sender,
-                  args.recipient, args.sendgrid_api_key, days_before_cert_expires)
+        send_mail(args.url, args.sender, args.recipient,
+                  cert_expiry_date)
     else:
         print('INFO: Nothing to worry about. The TLS certificate for', args.url,
               'will expire only in', days_before_cert_expires, 'days')
