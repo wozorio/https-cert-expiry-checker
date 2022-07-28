@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 
-""""
-HTTPS Certificate Expiry Checker
+""""HTTPS Certificate Expiry Checker
+Check the expiration date of HTTPS/TLS certificates and notify
+engineers in case the expiration date is less than the threshold in days.
 """
+
+__version__ = '0.0.1'
+__author__ = 'Wellington Ozorio <well.ozorio@gmail.com>'
 
 import argparse
 import datetime
@@ -13,9 +17,6 @@ import requests
 from python_http_client.exceptions import HTTPError
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-
-__author__ = 'Wellington Ozorio <well.ozorio@gmail.com>'
-__version__ = '0.0.1'
 
 
 def check_url(url: str):
