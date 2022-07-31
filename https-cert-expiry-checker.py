@@ -52,20 +52,23 @@ def get_days_before_cert_expires(cert_expiry_date: datetime.date):
     return days_before_cert_expires
 
 
-def send_mail(url: str, sender: str, recipients: list, cert_expiry_date: datetime.date):
+def send_mail(url: str, email: dict, cert_expiry_date: datetime.date):
     subject = f'TLS certificate for {url} about to expire'
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
     print('INFO: Sending notification via e-mail')
 
     message = Mail(
-        from_email=sender,
-        to_emails=recipients,
+        from_email=email['sender'],
+        to_emails=email['recipient'],
         subject=subject,
-        html_content=f'<p> Dear Site Reliability Engineer, </p> \
+        html_content=f"""
+            <p> Dear Site Reliability Engineer, </p> \
             <p> This is to notify you that the TLS certificate for <b>{url}</b> will expire on {cert_expiry_date}. </p> \
             <p> Please ensure a new certificate is ordered and installed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
-            <p> Sincerely yours, <br>DevOps Team </p>')
+            <p> Sincerely yours, <br>DevOps Team </p>
+        """
+    )
 
     try:
         sendgrid = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
@@ -117,6 +120,10 @@ def get_args():
 
 def main():
     args = get_args()
+    email = {
+        'sender': args.sender,
+        'recipient': args.recipient
+    }
 
     check_url(args.url)
 
@@ -124,14 +131,14 @@ def main():
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
     if days_before_cert_expires <= args.threshold:
-        print('WARN: The TLS certificate for', args.url, 'will expire in',
-              days_before_cert_expires, 'days')
+        print(f'WARN: The TLS certificate for {args.url} will expire in '
+              f'{days_before_cert_expires} days')
 
-        send_mail(args.url, args.sender, args.recipient,
-                  cert_expiry_date)
+        send_mail(args.url, email, cert_expiry_date)
     else:
-        print('INFO: Nothing to worry about. The TLS certificate for', args.url,
-              'will expire only in', days_before_cert_expires, 'days')
+        print(
+            f'INFO: Nothing to worry about. The TLS certificate for {args.url} '
+            f'will expire only in {days_before_cert_expires} days')
 
 
 if __name__ == "__main__":
