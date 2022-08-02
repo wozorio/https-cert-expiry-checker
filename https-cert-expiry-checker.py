@@ -13,8 +13,10 @@ import argparse
 import datetime
 import logging as log
 import os
-from urllib.request import ssl, socket
+
 import requests
+from urllib.request import ssl, socket
+
 from python_http_client.exceptions import HTTPError
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -60,7 +62,7 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date):
 
     message = Mail(
         from_email=email['sender'],
-        to_emails=email['recipient'],
+        to_emails=email['recipients'],
         subject=subject,
         html_content=f"""<p> Dear Site Reliability Engineer, </p> \
             <p> This is to notify you that the TLS certificate for <b>{url}</b> will expire on {cert_expiry_date}. </p> \
@@ -98,7 +100,7 @@ def get_args():
         help='recipients e-mail addresses',
         nargs='+',
         type=str,
-        dest='recipient',
+        dest='recipients',
         required=True)
     parser.add_argument(
         '-t',
@@ -120,7 +122,7 @@ def main():
     args = get_args()
     email = {
         'sender': args.sender,
-        'recipient': args.recipient
+        'recipients': args.recipients
     }
 
     check_url(args.url)
