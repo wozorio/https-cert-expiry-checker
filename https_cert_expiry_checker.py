@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 
-""""HTTPS Certificate Expiry Checker
-
-Check the expiration date of HTTPS/TLS certificates and notify
-engineers in case the expiration date is less than the threshold in days.
+"""
+Check the expiration date of HTTPS/TLS certificates and notify engineers
+in case the expiration date is less than the threshold in days.
 """
 
 __version__ = '0.0.1'
