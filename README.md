@@ -6,7 +6,7 @@
 
 # HTTPS Certificate Expiry Checker
 
-[![GitHub](https://img.shields.io/github/license/wozorio/https-cert-expiry-checker)](https://github.com/wozorio/https-cert-expiry-checker/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/wozorio/https_cert_expiry_checker)](https://github.com/wozorio/https_cert_expiry_checker/blob/master/LICENSE)
 [![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/PyCQA/pylint)
 
 A Python script that checks the expiration date of HTTPS/TLS certificates and notifies engineers in case the expiration date is less than the `threshold` in days.
@@ -27,8 +27,8 @@ A Python script that checks the expiration date of HTTPS/TLS certificates and no
 ## Usage
 
 ```
-$ ./https-cert-expiry-checker.py --help
-usage: https-cert-expiry-checker.py [-h] -u URL -s SENDER -r RECIPIENT
+$ ./https_cert_expiry_checker.py --help
+usage: https_cert_expiry_checker.py [-h] -u URL -s SENDER -r RECIPIENT
                                     [RECIPIENT ...] [-t THRESHOLD] [-v]
 
 optional arguments:
