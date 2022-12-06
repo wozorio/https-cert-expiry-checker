@@ -19,5 +19,10 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2.3.3
 
-      - uses: cclauss/GitHub-Action-for-pylint@0.7.0
-      - run: pip install -r requirements.txt ; pylint **/*.py
+      - name: Install dependencies
+        run: |
+          ./install-requirements.sh
+          pip install pylint
+
+      - name: Run pylint
+        run: pylint **/*.py
