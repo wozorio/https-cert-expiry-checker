@@ -24,7 +24,7 @@ from sendgrid.helpers.mail import Mail
 
 def check_url(url: str):
     try:
-        requests.get('https://' + url, allow_redirects=True)
+        requests.get('https://' + url, allow_redirects=True, timeout=5)
     except requests.exceptions.RequestException as err:
         raise SystemExit(err) from err
 
