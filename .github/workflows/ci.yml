@@ -22,5 +22,6 @@ jobs:
       - name: Install dependencies
         run: ./install-requirements.sh
 
-      - name: Run pylint
-        uses: cclauss/GitHub-Action-for-pylint@0.7.0
+      - uses: cclauss/GitHub-Action-for-pylint@0.7.0
+        with:
+          args: "pip install -r requirements.txt ; pylint **/*.py"
