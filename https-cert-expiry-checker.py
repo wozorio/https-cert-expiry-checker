@@ -13,11 +13,11 @@ import argparse
 import datetime
 import logging as log
 import os
+
 from urllib.request import ssl, socket
 
-import requests
-
 from python_http_client.exceptions import HTTPError
+import requests
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
