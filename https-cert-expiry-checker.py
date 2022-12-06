@@ -13,9 +13,9 @@ import argparse
 import datetime
 import logging as log
 import os
+from urllib.request import ssl, socket
 
 import requests
-from urllib.request import ssl, socket
 
 from python_http_client.exceptions import HTTPError
 from sendgrid import SendGridAPIClient
