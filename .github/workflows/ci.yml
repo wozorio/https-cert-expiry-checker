@@ -25,4 +25,4 @@ jobs:
           pip install pylint
 
       - name: Run pylint
-        run: pylint **/*.py
+        run: pylint https-cert-expiry-checker.py
