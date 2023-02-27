@@ -42,8 +42,8 @@ def get_cert_expiry_date(url: str, port: int = 443):
         print('ERROR: Failed to get certificate expiry date')
         log.exception(err)
         raise SystemExit(err) from err
-    else:
-        return cert_expiry_date
+
+    return cert_expiry_date
 
 
 def get_days_before_cert_expires(cert_expiry_date: datetime.date):
