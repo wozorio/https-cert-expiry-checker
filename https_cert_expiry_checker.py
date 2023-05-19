@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-"""
-Check the expiration date of HTTPS/TLS certificates and notify engineers
-in case the expiration date is less than the threshold in days.
+"""HTTPS cert expiry checker
+
+A script to check the expiration date of HTTPS/SSL certificates and notify
+engineers in case the expiration date is less than the threshold in days.
 """
 
 __version__ = "0.0.1"
@@ -121,8 +122,8 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_befor
     )
     try:
         sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
-        resp = sendgrid.send(message)
-        log(f"{resp.status_code} {resp.body} {resp.headers}")
+        response = sendgrid.send(message)
+        log(f"Response code: {response.status_code}\nBody: {response.body}\nHeaders: {response.headers}")
     except HTTPError as error:
         logger.exception(error)
         sys.exit(1)
