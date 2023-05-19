@@ -1,6 +1,6 @@
 <div align="center">
     <p>
-        <img alt="Python Logo" src="img/circle-python.svg?sanitize=true" width="75" />
+        <img alt="Python Logo" src="img/logo.png?sanitize=true" width="75" />
     </p>
 </div>
 
