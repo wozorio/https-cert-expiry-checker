@@ -24,8 +24,9 @@ from sendgrid.helpers.mail import Mail
 def main() -> None:
     """The main function."""
     args = get_args()
-    email = {"sender": args.sender, "recipients": args.recipients}
+    check_sendgrid_api_key_env_var()
 
+    email = {"sender": args.sender, "recipients": args.recipients}
     check_url(args.url)
 
     cert_expiry_date = get_cert_expiry_date(args.url)
@@ -33,7 +34,7 @@ def main() -> None:
 
     if days_before_cert_expires < args.threshold:
         log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
-        send_mail(args.url, email, cert_expiry_date)
+        send_mail(args.url, email, cert_expiry_date, days_before_cert_expires)
     else:
         log(
             f"INFO: Nothing to worry about. The TLS certificate for {args.url} "
@@ -65,6 +66,13 @@ def get_args() -> argparse.Namespace:
     args = parser.parse_args()
 
     return args
+
+
+def check_sendgrid_api_key_env_var() -> None:
+    """Check whether Sendgrid API key environment variable is set."""
+    if not os.getenv("SENDGRID_API_KEY"):
+        log("ERROR: SENDGRID_API_KEY environment variable is not set")
+        raise RuntimeError
 
 
 def check_url(url: str) -> None:
@@ -99,10 +107,9 @@ def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
     return days_before_cert_expires
 
 
-def send_mail(url: str, email: dict, cert_expiry_date: datetime.date) -> None:
+def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_before_cert_expires: int) -> None:
     """Send notification email through the SendGrid API."""
     subject = f"TLS certificate for {url} about to expire"
-    days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
     log("INFO: Sending notification via e-mail")
     message = Mail(
