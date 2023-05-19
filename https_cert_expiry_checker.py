@@ -85,7 +85,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
                 cert = ssock.getpeercert()
 
                 cert_expiry_date = datetime.datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
-    except Exception as error:
+    except OSError as error:
         logger.exception(error)
         sys.exit(1)
 
