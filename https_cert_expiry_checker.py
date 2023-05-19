@@ -69,7 +69,7 @@ def get_args() -> argparse.Namespace:
 
 
 def check_sendgrid_api_key_env_var() -> None:
-    """Check whether Sendgrid API key environment variable is set."""
+    """Check whether the environment variable with Sendgrid API key is set."""
     if not os.getenv("SENDGRID_API_KEY"):
         log("ERROR: SENDGRID_API_KEY environment variable is not set")
         raise RuntimeError
@@ -91,7 +91,6 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
         with socket.create_connection((url, port)) as sock:
             with context.wrap_socket(sock, server_hostname=url) as ssock:
                 cert = ssock.getpeercert()
-
                 cert_expiry_date = datetime.datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
     except socket.error as error:
         logger.exception(error)
