@@ -10,7 +10,7 @@ __author__ = "Wellington Ozorio <well.ozorio@gmail.com>"
 
 import argparse
 import datetime
-import logging as log
+import logging as logger
 import os
 import sys
 from urllib.request import socket, ssl
@@ -32,11 +32,11 @@ def main() -> None:
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
     if days_before_cert_expires <= args.threshold:
-        print(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
+        log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
 
         send_mail(args.url, email, cert_expiry_date)
     else:
-        print(
+        log(
             f"INFO: Nothing to worry about. The TLS certificate for {args.url} "
             f"will expire only in {days_before_cert_expires} days"
         )
@@ -72,7 +72,7 @@ def check_url(url: str) -> None:
     try:
         requests.get("https://" + url, allow_redirects=True, timeout=5)
     except requests.exceptions.RequestException as error:
-        log.exception(error)
+        logger.exception(error)
         sys.exit(1)
 
 
@@ -86,7 +86,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
 
                 cert_expiry_date = datetime.datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
     except Exception as error:
-        log.exception(error)
+        logger.exception(error)
         sys.exit(1)
 
     return cert_expiry_date
@@ -104,7 +104,7 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date) -> None:
     subject = f"TLS certificate for {url} about to expire"
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
-    print("INFO: Sending notification via e-mail")
+    log("INFO: Sending notification via e-mail")
     message = Mail(
         from_email=email["sender"],
         to_emails=email["recipients"],
@@ -119,10 +119,15 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date) -> None:
     try:
         sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
         resp = sendgrid.send(message)
-        print(resp.status_code, resp.body, resp.headers)
+        log(f"{resp.status_code} {resp.body} {resp.headers}")
     except HTTPError as error:
-        log.exception(error)
+        logger.exception(error)
         sys.exit(1)
+
+
+def log(msg: str) -> None:
+    """Wrapper to log messages to stderr."""
+    print(msg, file=sys.stderr)
 
 
 if __name__ == "__main__":
