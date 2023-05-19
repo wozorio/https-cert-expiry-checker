@@ -100,7 +100,7 @@ def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
 
 
 def is_expiring_cert(days_before_cert_expires: int, threshold: int) -> bool:
-    """Check whether the certificate is about to expire."""
+    """Check whether the SSL certificate is about to expire."""
     return days_before_cert_expires < datetime.timedelta(days=threshold)
 
 
