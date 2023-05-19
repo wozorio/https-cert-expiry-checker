@@ -55,6 +55,7 @@ def get_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "-t",
+        "--threshold",
         help="number of days to be notified before the certificate expires (default: 60)",
         type=int,
         dest="threshold",
