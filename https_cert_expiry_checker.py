@@ -102,9 +102,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
 
 def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
     """Return the amount of days remaining before the certificate expires."""
-    days_before_cert_expires = int((cert_expiry_date - datetime.datetime.now()).days)
-
-    return days_before_cert_expires
+    return int((cert_expiry_date - datetime.datetime.now()).days)
 
 
 def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_before_cert_expires: int) -> None:
