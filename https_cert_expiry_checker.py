@@ -31,7 +31,7 @@ def main() -> None:
     cert_expiry_date = get_cert_expiry_date(args.url)
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
-    if days_before_cert_expires < datetime.timedelta(days=args.threshold):
+    if is_expiring_cert(days_before_cert_expires, args.threshold):
         log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
 
         send_mail(args.url, email, cert_expiry_date)
@@ -48,10 +48,10 @@ def get_args() -> argparse.Namespace:
 
     required_arg = parser.add_argument_group("required arguments")
 
-    required_arg.add_argument("-u", help="URL to be checked", type=str, dest="url", required=True)
-    required_arg.add_argument("-s", help="sender e-mail address", type=str, dest="sender", required=True)
+    required_arg.add_argument("-u", "--url", help="URL to be checked", type=str, dest="url", required=True)
+    required_arg.add_argument("-s", "--sender", help="sender e-mail address", type=str, dest="sender", required=True)
     required_arg.add_argument(
-        "-r", help="recipients e-mail addresses", nargs="+", type=str, dest="recipients", required=True
+        "-r", "--recipients", help="recipients e-mail addresses", nargs="+", type=str, dest="recipients", required=True
     )
     parser.add_argument(
         "-t",
@@ -97,6 +97,11 @@ def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
     days_before_cert_expires = int((cert_expiry_date - datetime.datetime.now()).days)
 
     return days_before_cert_expires
+
+
+def is_expiring_cert(days_before_cert_expires: int, threshold: int) -> bool:
+    """Check whether the certificate is about to expire."""
+    return days_before_cert_expires < datetime.timedelta(days=threshold)
 
 
 def send_mail(url: str, email: dict, cert_expiry_date: datetime.date) -> None:
