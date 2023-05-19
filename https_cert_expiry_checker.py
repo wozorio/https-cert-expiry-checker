@@ -48,13 +48,14 @@ def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
 
     required_arg = parser.add_argument_group("required arguments")
+    optional_arg = parser.add_argument_group("optional arguments")
 
     required_arg.add_argument("-u", "--url", help="URL to be checked", type=str, dest="url", required=True)
     required_arg.add_argument("-s", "--sender", help="sender e-mail address", type=str, dest="sender", required=True)
     required_arg.add_argument(
         "-r", "--recipients", help="recipients e-mail addresses", nargs="+", type=str, dest="recipients", required=True
     )
-    parser.add_argument(
+    optional_arg.add_argument(
         "-t",
         "--threshold",
         help="number of days to be notified before the certificate expires (default: 60)",

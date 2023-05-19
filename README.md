@@ -32,8 +32,6 @@ usage: https_cert_expiry_checker.py [-h] -u URL -s SENDER -r RECIPIENTS [RECIPIE
 
 options:
   -h, --help            show this help message and exit
-  -t THRESHOLD, --threshold THRESHOLD
-                        number of days to be notified before the certificate expires (default: 60)
   -v, --version         show program's version number and exit
 
 required arguments:
@@ -42,5 +40,9 @@ required arguments:
                         sender e-mail address
   -r RECIPIENTS [RECIPIENTS ...], --recipients RECIPIENTS [RECIPIENTS ...]
                         recipients e-mail addresses
+
+optional arguments:
+  -t THRESHOLD, --threshold THRESHOLD
+                        number of days to be notified before the certificate expires (default: 60)
 
 ```
