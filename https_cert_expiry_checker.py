@@ -31,9 +31,8 @@ def main() -> None:
     cert_expiry_date = get_cert_expiry_date(args.url)
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
-    if is_expiring_cert(days_before_cert_expires, args.threshold):
+    if days_before_cert_expires < args.threshold:
         log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
-
         send_mail(args.url, email, cert_expiry_date)
     else:
         log(
@@ -100,11 +99,6 @@ def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
     return days_before_cert_expires
 
 
-def is_expiring_cert(days_before_cert_expires: int, threshold: int) -> bool:
-    """Check whether the SSL certificate is about to expire."""
-    return days_before_cert_expires < datetime.timedelta(days=threshold)
-
-
 def send_mail(url: str, email: dict, cert_expiry_date: datetime.date) -> None:
     """Send notification email through the SendGrid API."""
     subject = f"TLS certificate for {url} about to expire"
@@ -121,7 +115,6 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date) -> None:
             <p> Sincerely yours, <br>DevOps Team </p>
             """,
     )
-
     try:
         sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
         resp = sendgrid.send(message)
