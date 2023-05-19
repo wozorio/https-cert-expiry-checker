@@ -118,7 +118,7 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_befor
             <p> This is to notify you that the TLS certificate for <b>{url}</b> will expire on {cert_expiry_date}. </p> \
             <p> Please ensure a new certificate is ordered and installed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
             <p> Sincerely yours, </p> \
-            <br> DevOps Team </br>",
+            <p> DevOps Team </p>",
     )
     try:
         sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
