@@ -31,7 +31,7 @@ def main() -> None:
     cert_expiry_date = get_cert_expiry_date(args.url)
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
-    if days_before_cert_expires <= args.threshold:
+    if days_before_cert_expires < datetime.timedelta(days=args.threshold):
         log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
 
         send_mail(args.url, email, cert_expiry_date)
@@ -85,7 +85,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
                 cert = ssock.getpeercert()
 
                 cert_expiry_date = datetime.datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
-    except OSError as error:
+    except socket.error as error:
         logger.exception(error)
         sys.exit(1)
 
