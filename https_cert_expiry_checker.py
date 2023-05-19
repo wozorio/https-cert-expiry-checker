@@ -123,7 +123,7 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_befor
     try:
         sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
         response = sendgrid.send(message)
-        log(f"Response code: {response.status_code}\nBody: {response.body}\nHeaders: {response.headers}")
+        log(f"Response code: {response.status_code}\nResponse body: {response.body}\nResponse headers: {response.headers}")
     except HTTPError as error:
         logger.exception(error)
         sys.exit(1)
