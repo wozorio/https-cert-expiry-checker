@@ -108,7 +108,7 @@ def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
 
 
 def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_before_cert_expires: int) -> None:
-    """Send notification email through the SendGrid API."""
+    """Send notification email through SendGrid API."""
     subject = f"TLS certificate for {url} about to expire"
 
     log("INFO: Sending notification via e-mail")
