@@ -33,14 +33,15 @@ def main() -> None:
     cert_expiry_date = get_cert_expiry_date(args.url)
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
-    if days_before_cert_expires < args.threshold:
-        log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
-        send_mail(args.url, email, cert_expiry_date, days_before_cert_expires)
-    else:
+    if days_before_cert_expires > args.threshold:
         log(
             f"INFO: Nothing to worry about. The TLS certificate for {args.url} "
             f"will expire only in {days_before_cert_expires} days"
         )
+        return
+
+    log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
+    send_mail(args.url, email, cert_expiry_date, days_before_cert_expires)
 
 
 def get_args() -> argparse.Namespace:
