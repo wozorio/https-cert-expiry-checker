@@ -131,7 +131,7 @@ def send_mail(url: str, email: dict, cert_expiry_date: datetime.date, days_befor
 
 
 def log(msg: str) -> None:
-    """Wrapper to log messages to stderr."""
+    """Helper to log messages to stderr."""
     print(msg, file=sys.stderr)
 
 
