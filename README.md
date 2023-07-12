@@ -1,17 +1,25 @@
+# HTTPS Certificate Expiry Checker
+
+[![GitHub](https://img.shields.io/github/license/wozorio/https-cert-expiry-checker)](https://github.com/wozorio/https-cert-expiry-checker/blob/main/LICENSE)
+[![CI](https://github.com/wozorio/https-cert-expiry-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/wozorio/https-cert-expiry-checker/actions/workflows/ci.yml)
+
 <div align="center">
     <p>
         <img alt="Python Logo" src="img/logo.png?sanitize=true" width="150" />
     </p>
 </div>
 
-# HTTPS Certificate Expiry Checker
-
-[![GitHub](https://img.shields.io/github/license/wozorio/https-cert-expiry-checker)](https://github.com/wozorio/https-cert-expiry-checker/blob/main/LICENSE)
-[![CI](https://github.com/wozorio/https-cert-expiry-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/wozorio/https-cert-expiry-checker/actions/workflows/ci.yml)
+## Description
 
 A Python script that checks the expiration date of HTTPS/TLS certificates and notifies engineers in case the expiration date is less than the `threshold` in days.
 
-## Prerequisites
+### Built With
+
+Python 3.11.2
+
+## Getting Started
+
+### Prerequisites
 
 1. Set an environment variable with the SendGrid API key:
     ```bash
@@ -24,7 +32,7 @@ A Python script that checks the expiration date of HTTPS/TLS certificates and no
     $ sudo ./install-requirements.sh
     ```
 
-## Usage
+### Usage
 
 ```
 $ ./https_cert_expiry_checker.py --help
