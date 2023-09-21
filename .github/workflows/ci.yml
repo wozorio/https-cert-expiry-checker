@@ -30,7 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          poetry add pylint
           poetry install --no-interaction --no-root
 
       - name: Run pylint
