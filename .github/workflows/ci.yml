@@ -34,4 +34,4 @@ jobs:
           pip install pylint
 
       - name: Run pylint
-        run: find . -type f -name "*.py" | xargs pylint
+        run: poetry run pylint https_cert_expiry_checker.py
