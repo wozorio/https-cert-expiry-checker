@@ -1,3 +1,0 @@
-python-http-client==3.3.7
-requests==2.31.0
-sendgrid==6.10.0

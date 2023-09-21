@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "https-cert-expiry-checker"
+version = "0.1.0"
+description = ""
+authors = ["Wellington Ozorio <well.ozorio@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+requests = "^2.31.0"
+sendgrid = "^6.10.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
