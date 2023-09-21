@@ -30,8 +30,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          poetry add pylint
           poetry install --no-interaction --no-root
-          pip install pylint
 
       - name: Run pylint
         run: poetry run pylint https_cert_expiry_checker.py
