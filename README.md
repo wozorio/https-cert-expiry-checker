@@ -23,19 +23,19 @@ Python 3.11.2
 
 1. Set an environment variable with the SendGrid API key:
     ```bash
-    $ export SENDGRID_API_KEY=<SENDGRID_API_KEY>
+    export SENDGRID_API_KEY=<SENDGRID_API_KEY>
     ```
 
 1. Install requirements:
     ```bash
-    $ pip install poetry
-    $ poetry install
+    pip install poetry
+    poetry install
     ```
 
 ### Usage
 
 ```bash
-$ poetry run ./https_cert_expiry_checker.py --help
+poetry run ./https_cert_expiry_checker.py --help
 usage: https_cert_expiry_checker.py [-h] -u URL -s SENDER -r RECIPIENTS [RECIPIENTS ...] [-t THRESHOLD] [-v]
 
 options:
