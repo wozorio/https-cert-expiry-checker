@@ -27,15 +27,15 @@ Python 3.11.2
     ```
 
 1. Install requirements:
-
     ```bash
-    $ sudo ./install-requirements.sh
+    $ pip install poetry
+    $ poetry install
     ```
 
 ### Usage
 
-```
-$ ./https_cert_expiry_checker.py --help
+```bash
+$ poetry run ./https_cert_expiry_checker.py --help
 usage: https_cert_expiry_checker.py [-h] -u URL -s SENDER -r RECIPIENTS [RECIPIENTS ...] [-t THRESHOLD] [-v]
 
 options:
