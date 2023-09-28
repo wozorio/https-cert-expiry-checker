@@ -22,15 +22,16 @@ Python 3.11.2
 ### Prerequisites
 
 1. Set an environment variable with the SendGrid API key:
-    ```bash
-    export SENDGRID_API_KEY=<SENDGRID_API_KEY>
-    ```
+
+   ```bash
+   export SENDGRID_API_KEY=<SENDGRID_API_KEY>
+   ```
 
 1. Install requirements:
-    ```bash
-    pip install poetry
-    poetry install
-    ```
+   ```bash
+   pip install poetry
+   poetry install --without dev
+   ```
 
 ### Usage
 
@@ -52,5 +53,4 @@ required arguments:
 optional arguments:
   -t THRESHOLD, --threshold THRESHOLD
                         number of days to be notified before the certificate expires (default: 60)
-
 ```
