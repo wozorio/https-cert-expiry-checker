@@ -32,4 +32,4 @@ jobs:
           poetry install --no-interaction --no-root
 
       - name: Run pylint
-        run: poetry run pylint https_cert_expiry_checker.py
+        run: poetry run pylint *.py
