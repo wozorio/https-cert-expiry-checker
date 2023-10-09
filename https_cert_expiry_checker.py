@@ -10,6 +10,7 @@ __version__ = "0.0.1"
 __author__ = "Wellington Ozorio <well.ozorio@gmail.com>"
 
 import argparse
+import dataclasses
 import datetime
 import logging as logger
 import os
@@ -22,12 +23,20 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 
+@dataclasses.dataclass
+class Email:
+    """Represent the properties of an email."""
+
+    sender: str
+    recipients: list[str]
+    subject: str
+
+
 def main() -> None:
     """The main function."""
     args = get_args()
     check_sendgrid_api_key_env_var()
 
-    email = {"sender": args.sender, "recipients": args.recipients}
     check_url(args.url)
 
     cert_expiry_date = get_cert_expiry_date(args.url)
@@ -39,6 +48,8 @@ def main() -> None:
             f"will expire only in {days_before_cert_expires} days"
         )
         return
+
+    email = Email(sender=args.sender, recipients=args.recipients, subject=f"TLS certificate for {args.url} about to expire")
 
     log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
     send_email(args.url, email, cert_expiry_date, days_before_cert_expires)
@@ -104,16 +115,16 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
 
 def get_days_before_cert_expires(cert_expiry_date: datetime.date) -> int:
     """Return the amount of days remaining before the certificate expires."""
-    return int((cert_expiry_date - datetime.datetime.now()).days)
+    return int((cert_expiry_date - datetime.datetime.now(datetime.timezone.utc)).days)
 
 
-def send_email(url: str, email: dict, cert_expiry_date: datetime.date, days_before_cert_expires: int) -> None:
+def send_email(url: str, email: Email, cert_expiry_date: datetime.date, days_before_cert_expires: int) -> None:
     """Send notification email through SendGrid API."""
     log("INFO: Sending notification via e-mail")
     message = Mail(
-        from_email=email["sender"],
-        to_emails=email["recipients"],
-        subject=set_email_subject(url),
+        from_email=email.sender,
+        to_emails=email.recipients,
+        subject=email.subject,
         html_content=set_email_content(url, cert_expiry_date, days_before_cert_expires),
     )
     try:
@@ -125,19 +136,14 @@ def send_email(url: str, email: dict, cert_expiry_date: datetime.date, days_befo
         sys.exit(1)
 
 
-def set_email_subject(url: str) -> str:
-    """Set the subject of the email to be sent out."""
-    return f"TLS certificate for {url} about to expire"
-
-
 def set_email_content(url: str, cert_expiry_date: datetime.date, days_before_cert_expires: int) -> str:
     """Set the content in HTML of the email to be sent out."""
     return f"""
     <p> Dear Site Reliability Engineer, </p> \
     <p> This is to notify you that the TLS certificate for <b>{url}</b> will expire on {cert_expiry_date}. </p> \
-    <p> Please ensure a new certificate is ordered and installed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
+    <p> Please, ensure that the certificate is renewed in a timely fashion. There are {days_before_cert_expires} days remaining. </p> \
     <p> Sincerely yours, </p> \
-    <br> DevOps Team </br>",  
+    <br> DevOps Team </br>",
     """
 
 
