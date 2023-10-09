@@ -42,7 +42,7 @@ def main() -> None:
     cert_expiry_date = get_cert_expiry_date(args.url)
     days_before_cert_expires = get_days_before_cert_expires(cert_expiry_date)
 
-    if days_before_cert_expires > datetime.timedelta(days=args.threshold):
+    if days_before_cert_expires > args.threshold:
         log(
             f"INFO: Nothing to worry about. The TLS certificate for {args.url} "
             f"will expire only in {days_before_cert_expires} days"
