@@ -111,7 +111,6 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
     except socket.error as error:
         logger.exception(error)
         sys.exit(1)
-
     return cert_expiry_date
 
 
