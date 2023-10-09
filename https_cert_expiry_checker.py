@@ -105,7 +105,9 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
         with socket.create_connection((url, port)) as sock:
             with context.wrap_socket(sock, server_hostname=url) as ssock:
                 cert = ssock.getpeercert()
-                cert_expiry_date = datetime.datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z")
+                cert_expiry_date = datetime.datetime.strptime(cert["notAfter"], "%b %d %H:%M:%S %Y %Z").replace(
+                    tzinfo=datetime.timezone.utc
+                )
     except socket.error as error:
         logger.exception(error)
         sys.exit(1)
