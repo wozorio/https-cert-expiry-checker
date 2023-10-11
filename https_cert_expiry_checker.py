@@ -49,10 +49,14 @@ def main() -> None:
         )
         return
 
-    email = Email(sender=args.sender, recipients=args.recipients, subject=f"TLS certificate for {args.url} about to expire")
-
     log(f"WARN: The TLS certificate for {args.url} will expire in " f"{days_before_cert_expires} days")
-    send_email(args.url, email, cert_expiry_date, days_before_cert_expires)
+
+    send_email(
+        args.url,
+        Email(sender=args.sender, recipients=args.recipients, subject=f"TLS certificate for {args.url} about to expire"),
+        cert_expiry_date,
+        days_before_cert_expires,
+    )
 
 
 def get_args() -> argparse.Namespace:
