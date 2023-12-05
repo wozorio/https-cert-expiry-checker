@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
-sendgrid = "^6.10.0"
+sendgrid = "^6.11.0"
 
 
 [tool.poetry.group.dev.dependencies]
