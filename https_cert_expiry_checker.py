@@ -19,7 +19,7 @@ from urllib.request import socket, ssl
 
 import requests
 from python_http_client.exceptions import HTTPError
-from sendgrid import SendGridAPIClient
+from sendgrid import SendGridAPIClient, SendGridException
 from sendgrid.helpers.mail import Mail
 
 
@@ -137,6 +137,9 @@ def send_email(url: str, email: Email, cert_expiry_date: datetime.date, days_bef
         response = sendgrid.send(message)
         log(f"Response code: {response.status_code}\nResponse body: {response.body}\nResponse headers: {response.headers}")
     except HTTPError as error:
+        logger.exception(error)
+        sys.exit(1)
+    except SendGridException as error:
         logger.exception(error)
         sys.exit(1)
 
