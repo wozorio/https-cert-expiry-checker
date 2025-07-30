@@ -7,7 +7,7 @@ in case the expiration date is less than the `threshold` argument in days.
 """
 
 __version__ = "0.0.1"
-__author__ = "Wellington Ozorio <well.ozorio@gmail.com>"
+__author__ = "Wellington Ozorio <wozorio@duck.com>"
 
 import argparse
 import dataclasses
