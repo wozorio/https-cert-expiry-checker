@@ -13,7 +13,7 @@ sendgrid = "^6.12.5"
 
 
 [tool.poetry.group.dev.dependencies]
-pylint = "^3.3.8"
+pylint = "^3.3.9"
 
 [build-system]
 requires = ["poetry-core"]
