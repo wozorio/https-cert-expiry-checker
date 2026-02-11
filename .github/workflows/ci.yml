@@ -24,4 +24,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Run pylint
-        run: uv run --script https_cert_expiry_checker.py --with pylint -- pylint https_cert_expiry_checker.py
+        run: |
+          uv tool install pylint
+          uv sync
+          uv run pylint *.py
