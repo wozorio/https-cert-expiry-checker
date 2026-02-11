@@ -26,5 +26,5 @@ jobs:
       - name: Run pylint
         run: |
           uv tool install pylint
-          uv sync
+          uv sync --script *.py
           uv run pylint *.py
