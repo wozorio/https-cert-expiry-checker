@@ -24,10 +24,6 @@ jobs:
         uses: astral-sh/setup-uv@v5
 
       - name: Run pylint
-<<<<<<< HEAD
         run: |
           uv tool install pylint
           uv run pylint *.py
-=======
-        run: uv run pylint *.py
->>>>>>> e70e0d730a77151d6697d92fdab4be0a9989c815
