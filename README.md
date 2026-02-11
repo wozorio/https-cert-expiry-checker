@@ -31,8 +31,8 @@ A Python script that checks the expiration date of HTTPS/TLS certificates and no
 
 ### Usage
 
-```bash
-Usage: https_cert_expiry_checker.py URL SENDER [OPTIONS]
+```
+Usage: ./https_cert_expiry_checker.py URL SENDER [OPTIONS]
 
 Arguments:
   URL         The domain to check for certificate expiration date (e.g., example.com)
