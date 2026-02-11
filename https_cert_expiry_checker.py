@@ -151,7 +151,8 @@ def set_email_content(url: str, cert_expiry_date: datetime.datetime, days_before
     """Set the content in HTML of the email to be sent out."""
     return f"""<p>Dear Site Reliability Engineer,</p>
     <p>This is to notify you that the TLS certificate for <b>{url}</b> will expire on {cert_expiry_date}.</p>
-    <p>Please, ensure that the certificate is renewed in a timely fashion. There are {days_before_cert_expires} days remaining.</p>
+    <p>Please, ensure that the certificate is renewed in a timely fashion.
+    There are {days_before_cert_expires} days remaining.</p>
     <p>Sincerely yours,</p>
     <p>DevOps Team</p>"""
 
