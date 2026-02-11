@@ -37,13 +37,12 @@ Usage: https_cert_expiry_checker.py URL SENDER [OPTIONS]
 Arguments:
   URL         The domain to check for certificate expiration date (e.g., example.com)
   SENDER      The email address used as the sender for emails
-  RECIPIENTS  A comma-separated list of recipients to send emails to
+  RECIPIENTS  A comma-separated string containing recipients to send emails to
 
 
 Options:
-  --version                Show the version and exit.
-  -t, --threshold INTEGER  days before expiry to notify (default: 60)
-  --help                   Show this message and exit.
+  --threshold INTEGER  days before expiry to notify (default: 60)
+  --help               Show this message and exit.
 ```
 
 ### Example

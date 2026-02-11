@@ -49,7 +49,7 @@ def parse_recipients(_ctx, _param, value: str) -> list[str]:
 @click.argument("url")
 @click.argument("sender")
 @click.argument("recipients", callback=parse_recipients)
-@click.option("-t", "--threshold", default=60, type=int, help="days before expiry to notify (default: 60)")
+@click.option("--threshold", default=60, type=int, help="days before expiry to notify (default: 60)")
 def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     """Check the expiration date of HTTPS/SSL certificates and notify engineers
     in case the expiration date is less than the `threshold` argument in days.
@@ -126,7 +126,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime.datetime:
         raise SystemExit(1) from error
 
 
-def get_days_before_cert_expires(cert_expiry_date: datetime.datetime.date) -> int:
+def get_days_before_cert_expires(cert_expiry_date: datetime.datetime) -> int:
     """Return the amount of days remaining before the certificate expires."""
     return int((cert_expiry_date - datetime.datetime.now(datetime.timezone.utc)).days)
 
@@ -144,9 +144,7 @@ def send_email(url: str, email: Email, cert_expiry_date: datetime.datetime, days
         sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
         response = sendgrid.send(message)
         logger.info("Email sent successfully (status code: %i)", response.status_code)
-    except HTTPError as error:
-        logger.exception(error)
-    except SendGridException as error:
+    except (HTTPError, SendGridException) as error:
         logger.exception(error)
 
 
