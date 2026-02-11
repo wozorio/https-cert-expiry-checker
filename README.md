@@ -44,9 +44,3 @@ Options:
   --threshold INTEGER  days before expiry to notify (default: 60)
   --help               Show this message and exit.
 ```
-
-### Example
-
-```bash
-./https_cert_expiry_checker.py example.com sender@email.com -r recipient1@email.com -r recipient2@email.com -t 30
-```
