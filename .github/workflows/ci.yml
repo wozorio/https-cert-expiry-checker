@@ -25,6 +25,11 @@ jobs:
 
       - name: Run pylint
         run: |
-          uv tool install pylint
-          uv sync --script *.py
+          uv venv
+          source .venv/bin/activate
+          # TODO: installation of dependencies should be improved
+          # after support for TOML files for scripts is added.
+          # Ref.: https://github.com/astral-sh/uv/issues/5903
+          uv pip install pylint
+          uv pip install click colorlog python-http-client requests sendgrid
           uv run pylint *.py
