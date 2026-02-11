@@ -13,7 +13,6 @@
 
 # pylint: disable=missing-module-docstring
 
-__version__ = "0.0.1"
 __author__ = "Wellington Ozorio <wozorio@duck.com>"
 
 import dataclasses
@@ -41,13 +40,17 @@ class Email:
     subject: str
 
 
+def parse_recipients(_ctx, _param, value: str) -> list[str]:
+    """Split a comma-separated string containing recipients into a list."""
+    return value.split(",")
+
+
 @click.command()
-@click.version_option(version=__version__)
 @click.argument("url")
 @click.argument("sender")
-@click.option("-r", "--recipients", multiple=True, required=True, help="recipient email addresses")
+@click.argument("recipients", callback=parse_recipients)
 @click.option("-t", "--threshold", default=60, type=int, help="days before expiry to notify (default: 60)")
-def main(url: str, sender: str, recipients: tuple[str, ...], threshold: int) -> None:
+def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     """Check the expiration date of HTTPS/SSL certificates and notify engineers
     in case the expiration date is less than the `threshold` argument in days.
     """
@@ -72,7 +75,7 @@ def main(url: str, sender: str, recipients: tuple[str, ...], threshold: int) -> 
 
     send_email(
         url,
-        Email(sender=sender, recipients=list(recipients), subject=f"TLS certificate for {url} about to expire"),
+        Email(sender=sender, recipients=recipients, subject=f"TLS certificate for {url} about to expire"),
         cert_expiry_date,
         days_before_cert_expires,
     )
@@ -123,7 +126,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime.datetime:
         raise SystemExit(1) from error
 
 
-def get_days_before_cert_expires(cert_expiry_date: datetime.datetime) -> int:
+def get_days_before_cert_expires(cert_expiry_date: datetime.datetime.date) -> int:
     """Return the amount of days remaining before the certificate expires."""
     return int((cert_expiry_date - datetime.datetime.now(datetime.timezone.utc)).days)
 

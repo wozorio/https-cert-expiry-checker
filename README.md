@@ -17,30 +17,31 @@ A Python script that checks the expiration date of HTTPS/TLS certificates and no
 
 ### Prerequisites
 
-1. Install [uv](https://docs.astral.sh/uv/):
-
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-
 1. Set an environment variable with the SendGrid API key:
 
    ```bash
    export SENDGRID_API_KEY=<SENDGRID_API_KEY>
    ```
 
+1. Install [uv](https://docs.astral.sh/uv/):
+
+   ```bash
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   ```
+
 ### Usage
 
 ```bash
-./https_cert_expiry_checker.py --help
-Usage: https_cert_expiry_checker.py [OPTIONS] URL SENDER
+Usage: https_cert_expiry_checker.py URL SENDER [OPTIONS]
 
-  Check the expiration date of HTTPS/SSL certificates and notify engineers in
-  case the expiration date is less than the `threshold` argument in days.
+Arguments:
+  URL         The domain to check for certificate expiration date (e.g., example.com)
+  SENDER      The email address used as the sender for emails
+  RECIPIENTS  A comma-separated list of recipients to send emails to
+
 
 Options:
   --version                Show the version and exit.
-  -r, --recipients TEXT    recipient email addresses  [required]
   -t, --threshold INTEGER  days before expiry to notify (default: 60)
   --help                   Show this message and exit.
 ```
