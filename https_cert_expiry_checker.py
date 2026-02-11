@@ -99,8 +99,7 @@ def setup_logging() -> None:
 def check_sendgrid_api_key_env_var() -> None:
     """Check whether the environment variable with Sendgrid API key is set."""
     if not os.getenv("SENDGRID_API_KEY"):
-        logger.error("SENDGRID_API_KEY environment variable is not set")
-        raise RuntimeError
+        raise RuntimeError("SENDGRID_API_KEY environment variable is not set")
 
 
 def check_url(url: str) -> None:
@@ -122,8 +121,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime.datetime:
                     tzinfo=datetime.timezone.utc
                 )
     except socket.error as error:
-        logger.exception(error)
-        raise SystemExit(1) from error
+        raise RuntimeError(f"Failed to retrieve certificate from {url}") from error
 
 
 def get_days_before_cert_expires(cert_expiry_date: datetime.datetime) -> int:
