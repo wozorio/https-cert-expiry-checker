@@ -19,6 +19,7 @@ import dataclasses
 import datetime
 import logging
 import os
+import re
 from urllib.request import socket, ssl
 
 import click
@@ -27,6 +28,8 @@ from colorlog import ColoredFormatter
 from python_http_client.exceptions import HTTPError
 from sendgrid import SendGridAPIClient, SendGridException
 from sendgrid.helpers.mail import Mail
+
+EMAIL_ADDRESS_PATTERN = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
 logger = logging.getLogger(__name__)
 
@@ -40,21 +43,26 @@ class Email:
     subject: str
 
 
-def parse_recipients(value: str) -> list[str]:
-    """Click custom parameter type to parse a comma-separated string into a list of recipients."""
-    return value.split(",")
+def validate_email_addresses(value: str) -> list[str]:
+    """Click custom parameter type to validate the format of provided email addresses."""
+    emails = value.split(",")
+    for email in emails:
+        validate_email_address(email)
+    return emails
 
 
 @click.command()
 @click.argument("url")
 @click.argument("sender")
-@click.argument("recipients", type=parse_recipients)
+@click.argument("recipients", type=validate_email_addresses)
 @click.option("--threshold", default=60, type=int, help="days before expiry to notify (default: 60)")
 def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     """Check the expiration date of HTTPS/SSL certificates and notify engineers
     in case the expiration date is less than the `threshold` argument in days.
     """
     setup_logging()
+
+    validate_email_address(sender)
 
     check_sendgrid_api_key_env_var()
 
@@ -96,6 +104,14 @@ def setup_logging() -> None:
     logger.setLevel("INFO")
 
 
+def validate_email_address(email_address: str) -> None:
+    """Validate whether an email address has a valid format."""
+    match = EMAIL_ADDRESS_PATTERN.match(email_address)
+
+    if not match:
+        raise ValueError(f"Email address format {email_address} is not valid")
+
+
 def check_sendgrid_api_key_env_var() -> None:
     """Check whether the environment variable with Sendgrid API key is set."""
     if not os.getenv("SENDGRID_API_KEY"):
@@ -103,7 +119,7 @@ def check_sendgrid_api_key_env_var() -> None:
 
 
 def check_url(url: str) -> None:
-    """Validate the provided URL."""
+    """Check the provided URL."""
     try:
         requests.get("https://" + url, allow_redirects=True, timeout=5)
     except requests.exceptions.RequestException as error:
