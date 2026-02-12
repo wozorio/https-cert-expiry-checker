@@ -40,15 +40,15 @@ class Email:
     subject: str
 
 
-def parse_recipients(_ctx, _param, value: str) -> list[str]:
-    """Split a comma-separated string containing recipients into a list."""
+def parse_recipients(value: str) -> list[str]:
+    """Click custom parameter type to parse a comma-separated string into a list of recipients."""
     return value.split(",")
 
 
 @click.command()
 @click.argument("url")
 @click.argument("sender")
-@click.argument("recipients", callback=parse_recipients)
+@click.argument("recipients", type=parse_recipients)
 @click.option("--threshold", default=60, type=int, help="days before expiry to notify (default: 60)")
 def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     """Check the expiration date of HTTPS/SSL certificates and notify engineers
