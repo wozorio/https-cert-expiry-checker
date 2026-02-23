@@ -137,7 +137,7 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime.datetime:
                     tzinfo=datetime.timezone.utc
                 )
     except socket.error as error:
-        raise RuntimeError(f"Failed to retrieve certificate from {url}") from error
+        logger.exception(error)
 
 
 def get_days_before_cert_expires(cert_expiry_date: datetime.datetime) -> int:
