@@ -77,11 +77,7 @@ def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     days_before_cert_expires = (cert_expiry_date - now).days
 
     if (cert_expiry_date - now) > timedelta(days=threshold):
-        log(
-            "Nothing to worry about. The TLS certificate for %s is expiring only in %i days",
-            url,
-            days_before_cert_expires,
-        )
+        log(f"Nothing to worry, the TLS certificate for {url} is expiring only in {days_before_cert_expires} days")
         return
 
     log(f"The TLS certificate for {url} is expiring in {days_before_cert_expires} days")
