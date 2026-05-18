@@ -17,7 +17,6 @@
 __author__ = "Wellington Ozorio <wozorio@duck.com>"
 
 import dataclasses
-import logging
 import os
 import re
 from datetime import datetime, timedelta, timezone
@@ -25,7 +24,6 @@ from urllib.request import socket, ssl
 
 import click
 import requests
-from colorlog import ColoredFormatter
 from jinja2 import Template
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -40,8 +38,6 @@ There are {{ days_before_cert_expires }} days remaining.</p>
 <p>Sincerely yours,</p>
 <p>DevOps Team</p>
 """)
-
-logger = logging.getLogger(__name__)
 
 
 @dataclasses.dataclass
@@ -70,8 +66,6 @@ def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     """Check the expiration date of HTTPS/SSL certificates and notify engineers
     in case the expiration date is less than the `threshold` argument in days.
     """
-    setup_logging()
-
     validate_email_address(sender)
 
     check_sendgrid_api_key_env_var()
@@ -83,14 +77,14 @@ def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     days_before_cert_expires = (cert_expiry_date - now).days
 
     if (cert_expiry_date - now) > timedelta(days=threshold):
-        logger.info(
+        log(
             "Nothing to worry about. The TLS certificate for %s is expiring only in %i days",
             url,
             days_before_cert_expires,
         )
         return
 
-    logger.warning("The TLS certificate for %s is expiring in %i days", url, days_before_cert_expires)
+    log(f"The TLS certificate for {url} is expiring in {days_before_cert_expires} days")
 
     send_email(
         url,
@@ -100,19 +94,9 @@ def main(url: str, sender: str, recipients: list[str], threshold: int) -> None:
     )
 
 
-def setup_logging() -> None:
-    """Set up a custom logger."""
-    handler = logging.StreamHandler()
-    formatter = ColoredFormatter(
-        "%(log_color)s%(asctime)s %(levelname)-8s%(reset)s %(white)s%(message)s",
-        datefmt="%Y-%m-%dT%H:%M:%S%z",  # ISO-8601 format
-        reset=True,
-        log_colors={"DEBUG": "cyan", "INFO": "green", "WARNING": "yellow", "ERROR": "red"},
-        style="%",
-    )
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel("INFO")
+def log(message: str) -> None:
+    """Write a message to stderr."""
+    click.echo(message, err=True)
 
 
 def validate_email_address(email_address: str) -> None:
@@ -146,25 +130,20 @@ def get_cert_expiry_date(url: str, port: int = 443) -> datetime:
 
 def send_email(url: str, email: Email, cert_expiry_date: datetime, days_before_cert_expires: int) -> None:
     """Send notification email through SendGrid API."""
-    logger.info("Sending notification via e-mail")
+    log("Sending notification via e-mail")
     message = Mail(
         from_email=email.sender,
         to_emails=email.recipients,
         subject=email.subject,
-        html_content=set_email_content(url, cert_expiry_date, days_before_cert_expires),
+        html_content=EMAIL_TEMPLATE.render(
+            url=url,
+            cert_expiry_date=cert_expiry_date,
+            days_before_cert_expires=days_before_cert_expires,
+        ),
     )
     sendgrid = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
     response = sendgrid.send(message)
-    logger.info("Email sent successfully (status code: %i)", response.status_code)
-
-
-def set_email_content(url: str, cert_expiry_date: datetime, days_before_cert_expires: int) -> str:
-    """Set the content in HTML of the email to be sent out."""
-    return EMAIL_TEMPLATE.render(
-        url=url,
-        cert_expiry_date=cert_expiry_date,
-        days_before_cert_expires=days_before_cert_expires,
-    )
+    log(f"Email sent successfully (status code: {response.status_code}")
 
 
 if __name__ == "__main__":
